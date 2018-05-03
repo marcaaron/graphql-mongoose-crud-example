@@ -1,5 +1,8 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
-const mongoURI = 'mongodb://admin:password@ds113700.mlab.com:13700/graphql-api';
+
+// Add your mongodb URI in the .env file as MONGODB_URI
+const mongoURI = process.env.MONGODB_URI;
 
 module.exports = () => {
 
