@@ -3,28 +3,10 @@ const PageModel = require('../models/page');
 
 const { GraphQLNonNull, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema, GraphQLList } = graphql;
 
-const PageType = new GraphQLObjectType({
-  name:'Page',
-  fields: () => ({
-    title:{type: GraphQLString},
-    content:{type: GraphQLString},
-    route:{type: GraphQLString}
-  })
-})
+const PageType = require('./types');
 
-const RootQuery = new GraphQLObjectType({
-  name: 'RootQueryType',
-  fields: {
-    page:{
-      type: PageType,
-      args: { id: {type: GraphQLString}},
-      resolve(parentValue, args){
-        return PageModel.findOne({_id:args.id});
-      }
-    }
-  }
-});
-
+// Mutations to Create a Page, or Delete / Update an Existing page by ID
+// Can Create a new Page without links but all other fields are required!!!
 const mutation = new GraphQLObjectType({
   name:'Mutation',
   fields: {
@@ -32,14 +14,16 @@ const mutation = new GraphQLObjectType({
       type: PageType,
       args: {
         title: {type: new GraphQLNonNull(GraphQLString)},
-        content: {type: new GraphQLNonNull(GraphQLString)},
-        route: {type: new GraphQLNonNull(GraphQLString)}
+        content: {type: GraphQLString},
+        route: {type: new GraphQLNonNull(GraphQLString)},
+        links:{type: GraphQLList(GraphQLString)}
       },
       resolve(parentValue, {title, content, route}){
         const instance = new PageModel({ title: title, content:content, route:route});
         return instance.save();
       }
     },
+    // Delete by ID
     deletePage: {
       type: PageType,
       args: {
@@ -49,13 +33,15 @@ const mutation = new GraphQLObjectType({
         return PageModel.findByIdAndRemove(id);
       }
     },
+    // Update by ID
     updatePage: {
       type: PageType,
       args: {
         id: {type: new GraphQLNonNull(GraphQLString)},
         title: {type: GraphQLString},
         content: {type: GraphQLString},
-        route: {type: GraphQLString}
+        route: {type: GraphQLString},
+        links:{type: GraphQLList(GraphQLString)}
       },
       resolve(parentValue, args){
         return PageModel.findByIdAndUpdate(args.id, args, {new:true});
@@ -64,7 +50,4 @@ const mutation = new GraphQLObjectType({
   }
 });
 
-module.exports = new GraphQLSchema({
-  query: RootQuery,
-  mutation: mutation
-});
+module.exports = mutation;
