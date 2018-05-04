@@ -4,6 +4,9 @@ const expressGraphQL = require('express-graphql');
 const schema = require('./graphql/schema');
 const mongoose = require('./mongoose/server');
 const db = mongoose();
+const cors = require('cors')
+
+app.use(cors());
 
 // import PageModel for testing mongo queries before
 const PageModel = require('./models/page');
