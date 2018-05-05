@@ -2,6 +2,7 @@ import React from 'react';
 import {NavLink} from 'react-router-dom';
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
+import Loading from './Loading';
 
 const Header = (props) => (
   <Query
@@ -18,7 +19,7 @@ const Header = (props) => (
     `}
     >
       {({ loading, error, data })=>{
-        if(loading) return <p></p>;
+        if(loading) return <Loading/>;
         if(error) return <p>Error...</p>;
         return(
           <div>

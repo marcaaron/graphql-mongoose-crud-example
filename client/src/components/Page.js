@@ -2,6 +2,7 @@ import React from 'react';
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
 import { Link } from 'react-router-dom';
+import Loading from './Loading';
 
 const query = gql`
 query PageByRoute($route:String!){
@@ -22,7 +23,7 @@ const Page = ({route}) => (
   <Query query={query} variables={{route}}>
       {
         ({ loading, error, data }) => {
-        if(loading) return <p></p>;
+        if(loading) return <Loading/>;
         if(error) return <p></p>;
         const {pageByRoute} = data;
         if(pageByRoute !== null){

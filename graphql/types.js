@@ -19,7 +19,10 @@ const PageType = new GraphQLObjectType({
     childPages:{
       type: GraphQLList(PageType),
       resolve(parentValue, args){
-        return PageModel.find({_id: {$in: parentValue.links }}).then(res=>res);
+        return PageModel.find({_id: {$in: parentValue.links }})
+        .then(res => res.sort((a,b)=>{
+          return parentValue.links.indexOf(a._id) - parentValue.links.indexOf(b._id)
+        }));
       }
     }
   })

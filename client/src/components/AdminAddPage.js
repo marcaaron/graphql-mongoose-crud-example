@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import AdminAddPageForm from './AdminAddPageForm';
 
-
 class AdminAddPage extends Component{
   state = {
     title:'',

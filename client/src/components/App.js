@@ -8,9 +8,15 @@ import Page from './Page';
 import Admin from './Admin';
 import Header from './Header';
 import AdminAddPage from './AdminAddPage';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+
+const cache = new InMemoryCache({
+  dataIdFromObject: object => object.id || null
+});
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql'
+  uri: 'http://localhost:4000/graphql',
+  cache
 });
 
 class App extends Component {

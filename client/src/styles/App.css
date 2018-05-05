@@ -2,9 +2,10 @@
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.svg-loading {
+  transform-origin: center;
+  animation: App-logo-spin infinite 2s linear;
+  /* height: 80px; */
 }
 
 .App-header {
@@ -34,11 +35,11 @@
 .page-tag{
   display:inline-block;
   padding:5px 7px;
-  margin:1px;
   border-radius: 50px;
   background-color: #b2cfff;
   font-size: 0.8em;
   user-select: none;
+  border: 2px solid white;
 }
 
 a{
