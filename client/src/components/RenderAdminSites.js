@@ -3,7 +3,8 @@ import RenderChildPages from "./RenderChildPages";
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import Loading from './Loading';
-
+import { compose } from 'react-apollo';
+import AdminPagesAll from './AdminPagesAll';
 let dragSource = null;
 let dropSource = null;
 
@@ -11,11 +12,26 @@ const mutation =  gql`
   mutation UpdatePage($id: String!, $links:[String]!){
   updatePage(id:$id, links:$links){
     id
+    links
+    childPages{
+      id
+      links
+      title
+    }
   }
 }
 `;
 
-const query = gql`
+const allPages = gql`
+  {
+    allPages {
+      id
+      title
+    }
+  }
+`;
+
+const pageByTitle = gql`
 {
   pageByTitle(title:"Home"){
     title
@@ -25,25 +41,88 @@ const query = gql`
       title
       id
       links
+      childPages{
+        title
+        id
+        links
+        childPages{
+          title
+          id
+          links
+          childPages{
+            title
+            id
+            links
+            childPages{
+              title
+              id
+              links
+              childPages{
+                title
+                id
+                links
+                childPages{
+                  title
+                  id
+                  links
+                }
+                childPages{
+                  title
+                  id
+                  links
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
+`;
+
+const refetch = gql`
+  query pageById($id: String!){
+    pageById(id: $id){
+      id
+      title
+      links
+      childPages{
+        title
+        links
+        id
+      }
+    }
+  }
 `
 
 class RenderAdminSites extends Component{
-  componentDidMount(){
-    console.log('this.props', this.props);
+  constructor(props){
+    super(props);
+
+    this.state = {
+      toggle: {
+        toggle_Home: false
+      },
+    }
+  }
+
+  handleClick = (e) => {
+    e.target.scrollIntoView({behavior:'smooth', block:'start'});
+    if(e.target.dataset.children){
+      const toggleString = e.target.dataset.toggle;
+      const toggle = {...this.state.toggle};
+      console.log(toggleString);
+      if(!toggle[toggleString]){
+        toggle[toggleString] = true;
+      }else{
+        toggle[toggleString] = !toggle[toggleString];
+      }
+      this.setState({toggle});
+    }
   }
 
   handleDragStart = (e) => {
-    console.log(
-      "ID of page: ", e.target.dataset.id+"\n",
-      "Title of Page: ", e.target.dataset.title+"\n",
-      "ID of Parent: ", e.target.dataset.parentid+"\n",
-      "Title of Parent: ", e.target.dataset.parenttitle
-    );
-    console.table(JSON.parse(e.target.dataset.parentlinks));
-
     dragSource = e.target;
     e.currentTarget.style.opacity = '0.4';
     e.dataTransfer.effectAllowed = 'move';
@@ -73,24 +152,47 @@ class RenderAdminSites extends Component{
     if(drpSrc.parentid === drgSrc.parentid){
       // MAKE A COPY OF THE SHARED LINKS
       const links = [...drpSrc.parentlinks];
-      console.log(drpSrc.parentid);
-      console.table(links);
       // SPLICE THE ID OUT OF THE CURRENT INDEX OF DRAG SOURCE
       links.splice(drgSrc.indexInLinks, 1);
       // SPLICE THE ID AT THE CURRENT INDEX OF DROP SOURCE
       links.splice(drpSrc.indexInLinks, 0, drgSrc.id)
-      // CALL MUTATION AND PASS LINKS!
-      console.table(links);
-      console.log(this.props);
-      this.props.mutate(
+
+      // CREATE CHILD PAGES OBJECT TO PASS TO OPTIMISTIC RESULT
+      let data = {...this.props.pageByTitle};
+
+      const searchTree = (id, obj, rmIndex, insIndex) => {
+        if(obj.id===id){
+          const resultObj = {...obj};
+          let childPages = [...resultObj.childPages];
+          const temp = childPages.splice(rmIndex, 1);
+          childPages.splice(insIndex, 0, temp[0]);
+          resultObj.childPages = childPages;
+          childPages = resultObj.childPages;
+          return childPages;
+        }else if (obj.childPages.length>0){
+          let result = null;
+          for(let i=0; result === null && i < obj.childPages.length; i++){
+            result = searchTree(id, obj.childPages[i], rmIndex, insIndex);
+          }
+          return result;
+        }
+        return null;
+      }
+
+      // CALL MUTATION AND PASS LINKS & CHILD PAGES
+      this.props.mutation(
         {
           variables: {id: drpSrc.parentid, links: links},
           optimisticResponse: {
             updatePage:{
-              id: drpSrc.parentid, links: links, __typename: 'Page'
-            }
+              id: drpSrc.parentid,
+              links: links,
+              childPages: searchTree(drpSrc.parentid, data.pageByTitle, drgSrc.indexInLinks, drpSrc.indexInLinks),
+              __typename:'Page'
+            },
+            __typename: 'Mutation'
           },
-          refetchQueries:[{query}]
+          refetchQueries:[{query: refetch, variables:{id:drpSrc.parentid}}]
         });
     }
   }
@@ -102,18 +204,20 @@ class RenderAdminSites extends Component{
 
   handleDragEnter = (e) => {
     if(e.target !== dragSource){
-      if(e.target.dataset.i > dragSource.dataset.i){
-        if(Number(e.target.dataset.i) === this.state.childPages.length-1){
-          e.target.style.border = "2px solid black";
-        }else{
-          e.target.style.marginBottom = "10px";
+      if(e.target.dataset.parentid === dragSource.dataset.parentid){
+        if(e.target.dataset.index > dragSource.dataset.index){
+          if(Number(e.target.dataset.index) === JSON.parse(e.target.dataset.parentlinks).length-1){
+            e.target.style.border = "2px solid black";
+          }else{
+            e.target.style.marginBottom = "10px";
+          }
         }
-      }
-      else{
-        if(Number(e.target.dataset.i)===0){
-          e.target.style.border = "2px solid black";
-        }else{
-          e.target.style.marginTop = "10px";
+        else{
+          if(Number(e.target.dataset.index)===0){
+            e.target.style.marginTop = "10px";
+          }else{
+            e.target.style.marginTop = "10px";
+          }
         }
       }
     }
@@ -121,7 +225,7 @@ class RenderAdminSites extends Component{
   }
 
   handleDragLeave = (e) => {
-    if(e.target.dataset.i > dragSource.dataset.i){
+    if(e.target.dataset.index > dragSource.dataset.index){
       e.target.style.marginBottom = "";
     }
     else{
@@ -136,33 +240,61 @@ class RenderAdminSites extends Component{
     dragSource.style.opacity = "";
   }
 
-  componentWillUpdate(nextProps){
-    console.log(this.props, nextProps);
-  }
-
   render(){
-    const title = "Home";
+    if(this.props.pageByTitle.loading) return <Loading/>;
+    console.log(this.props);
+    const {title, id, links, childPages} = this.props.pageByTitle.pageByTitle;
     return(
-      <div style={{textAlign:"left"}}>
-        <div>
-          <span
-            className="site-root page-tag">
-              {title}
-              {/* { !this.state.toggle.cp0 ? '▼' : '►' } */}
-          </span>
+      <div className="admin-pages-container" style={{textAlign:"left"}}>
+        <div className="admin-pages-sitemap">
+          <div className="child-pages">
+            <span
+              onClick={this.handleClick}
+              data-toggle={`toggle_${id}`}
+              data-children={true}
+              className={`site-root page-tag`}>
+                {title}
+                { !this.state.toggle[`toggle_${id}`] ? '▼' : '►' }
+            </span>
+          </div>
+          <RenderChildPages
+            parentPageTitle={title}
+            parentPageId={id}
+            parentPageLinks={links}
+            childPages={childPages}
+            handleDragLeave={this.handleDragLeave}
+            handleDragStart={this.handleDragStart}
+            handleDragOver={this.handleDragOver}
+            handleDragEnd={this.handleDragEnd}
+            handleDragEnter={this.handleDragEnter}
+            handleDrop={this.handleDrop}
+            handleClick={this.handleClick}
+            toggle={this.state.toggle}
+          />
         </div>
-        <RenderChildPages
-          title={title}
-          handleDragLeave={this.handleDragLeave}
-          handleDragStart={this.handleDragStart}
-          handleDragOver={this.handleDragOver}
-          handleDragEnd={this.handleDragEnd}
-          handleDragEnter={this.handleDragEnter}
-          handleDrop={this.handleDrop}
+        <AdminPagesAll
+           handleClick={this.handleClick}
+           allPages={this.props.allPages.allPages}
+           handleDragStart={this.handleDragStart}
+           handleDrop={this.handleDrop}
+           handleDragOver={this.handleDragOver}
+           handleDragEnd={this.handleDragEnd}
+           handleDragEnter={this.handleDragEnter}
+           handleDragLeave={this.handleDragLeave}
         />
       </div>
     );
   }
 }
 
-export default graphql(mutation)(RenderAdminSites);
+export default compose(
+   graphql(allPages, {
+      name: "allPages"
+   }),
+   graphql(pageByTitle, {
+      name: "pageByTitle"
+   }),
+   graphql(mutation, {
+      name: "mutation"
+   })
+)(RenderAdminSites);

@@ -1,57 +1,37 @@
 import React, {Component} from 'react';
 import uuidv1 from 'uuid/v1';
-import Loading from './Loading';
-import gql from 'graphql-tag';
-import { Query } from "react-apollo";
 
-const query = gql`
-  query pageByTitle($title: String!){
-    pageByTitle(title: $title){
-      title
-      id
-      links
-      childPages{
-        title
-        id
-        links
-        childPages{
-          title
-        }
-      }
-    }
-  }
-`;
+class RenderChildPages extends Component{
+  render(){
+    const {parentPageId, parentPageLinks, parentPageTitle, handleDragLeave, handleDrop, handleDragEnd, handleDragOver, handleDragEnter, handleDragStart, childPages, handleClick, toggle} = this.props;
 
-const RenderChildPages = (
-  {
-    title,
-    handleDragLeave,
-    handleDrop,
-    handleDragEnd,
-    handleDragOver,
-    handleDragEnter,
-    handleDragStart
-  })=>(
-  <Query query={query} variables={{title}}>
-    {({loading, error, data})=>{
-      if(loading) return <Loading/>;
-      if(error) return <div>Error!</div>;
-      console.log(data);
+      let style;
+      if(toggle[`toggle_${parentPageId}`]){
+        style = {display:'none'}
+      };
+
       return (
         <div
-          className="child-pages"
+          style={style}
+          className={`child-pages container_id_${parentPageId} toggle_${parentPageId}`}
           key={uuidv1()}>
 
-          {data.pageByTitle.childPages.map((page, i)=>
+          {childPages.map((page, i)=>
             page.childPages && page.childPages.length > 0 ?
             [
-              <div id={page.id} key={uuidv1()}>
+              <div key={uuidv1()}>
                 <span
+                  data-toggle={`toggle_${page.id}`}
+                  onClick={handleClick}
                   id={page.id}
                   draggable="true"
                   data-index={i}
+                  data-children={true}
                   data-id={page.id}
                   data-title={page.title}
+                  data-parentid={parentPageId}
+                  data-parentlinks={JSON.stringify(parentPageLinks)}
+                  data-parenttitle={parentPageTitle}
                   onDragStart={handleDragStart}
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
@@ -61,30 +41,38 @@ const RenderChildPages = (
                   className="page-tag"
                 >
                   {page.title}
-                  {/* { !toggle[`cp${index}${i}`] ? '▼' : '►' } */}
+                  { !toggle[`toggle_${page.id}`] ? '▼' : '►' }
                 </span>
               </div>,
               <RenderChildPages
-                title={page.title}
+                key={uuidv1()}
+                parentPageTitle={page.title}
+                parentPageId={page.id}
+                parentPageLinks={page.links}
+                childPages={page.childPages}
                 handleDragLeave={handleDragLeave}
                 handleDragStart={handleDragStart}
                 handleDragOver={handleDragOver}
                 handleDragEnd={handleDragEnd}
                 handleDragEnter={handleDragEnter}
                 handleDrop={handleDrop}
+                toggle={toggle}
+                handleClick={handleClick}
               />
             ]
             :
               <div key={uuidv1()}>
                 <span
+                  onClick={handleClick}
                   id={page.id}
+                  data-children={false}
                   draggable="true"
                   data-index={i}
                   data-id={page.id}
                   data-title={page.title}
-                  data-parentlinks={JSON.stringify(data.pageByTitle.links)}
-                  data-parentid={data.pageByTitle.id}
-                  data-parenttitle={data.pageByTitle.title}
+                  data-parentid={parentPageId}
+                  data-parentlinks={JSON.stringify(parentPageLinks)}
+                  data-parenttitle={parentPageTitle}
                   onDragStart={handleDragStart}
                   onDrop={handleDrop}
                   onDragOver={handleDragOver}
@@ -99,8 +87,7 @@ const RenderChildPages = (
           )}
         </div>
       );
-    }}
-  </Query>
-  );
+  }
+}
 
 export default RenderChildPages;
