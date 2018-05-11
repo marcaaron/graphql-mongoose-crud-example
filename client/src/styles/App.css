@@ -89,3 +89,21 @@ h4{
   width:300px;
   height:2em;
 }
+
+.admin-add-staff-form{
+  display:flex;
+  flex-direction:column;
+  width:300px;
+}
+
+.admin-media{
+  display:flex;
+  flex-wrap: wrap;
+}
+
+.admin-media-card img{
+  width:200px;
+  height:200px;
+  object-fit: cover;
+  object-position: top;
+}

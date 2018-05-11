@@ -1,20 +1,9 @@
 import React from 'react';
-import gql from "graphql-tag";
-import { Mutation } from "react-apollo";
 
-const ADD_PAGE = gql`
-  mutation addPage($title:String!, $content:String!, $route:String!){
-  addPage(title:$title, content: $content, route: $route){
-    id
-  }
-}
-`;
-
-const AdminAddPageForm = ({handleChange, title, route, content, links}) => {
+const AdminAddPageForm = (props) => {
+  const {handleChange, handleSubmit, title, route, content, links} = props;
   return (
-    <Mutation mutation={ADD_PAGE}>
-      {(addPage, { data }) => (
-      <form onSubmit={e => {e.preventDefault(); addPage({variables:{title, route, content, links}});}}>
+      <form onSubmit={handleSubmit}>
         <label>Title</label>
         <input onChange={handleChange} type="text" id="title" value={title}></input>
 
@@ -25,8 +14,6 @@ const AdminAddPageForm = ({handleChange, title, route, content, links}) => {
         <input onChange={handleChange} type="text" id="content" value={content}></input>
         <input type="submit" value="Submit"/>
       </form>
-    )}
-    </Mutation>
   );
 }
 export default AdminAddPageForm;

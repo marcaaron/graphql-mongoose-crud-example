@@ -1,8 +1,9 @@
 const graphql = require('graphql');
 const PageModel = require('../models/page');
+const StaffMemberModel = require('../models/StaffMember');
 const mongoose = require('mongoose');
 
-const { GraphQLNonNull, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema, GraphQLList } = graphql;
+const { GraphQLNonNull, GraphQLScalarType, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema, GraphQLList } = graphql;
 
 // Set Up a Page Type
   // Links = an array of page ids to populate the childPages field
@@ -28,4 +29,31 @@ const PageType = new GraphQLObjectType({
   })
 });
 
-module.exports = PageType;
+// Staff Member Type
+
+const StaffMemberType = new GraphQLObjectType({
+  name:'Staff',
+  fields: () => ({
+    id:{type: GraphQLString},
+    firstName:{type: GraphQLString},
+    lastName:{type: GraphQLString},
+    dept:{type: GraphQLString},
+    description:{type: GraphQLString},
+    contact:{type: GraphQLString},
+    route:{type: GraphQLString},
+    avatarUrl:{type: GraphQLString}
+  })
+});
+
+// S3 Media Type
+
+const MediaType = new GraphQLObjectType({
+  name:'Media',
+  fields: ()=>({
+    key:{type: GraphQLString},
+    lastModified: {type: GraphQLString},
+    urlString: {type: GraphQLString}
+  })
+});
+
+module.exports = { PageType, StaffMemberType, MediaType };

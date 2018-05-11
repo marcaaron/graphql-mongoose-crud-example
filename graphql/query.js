@@ -1,8 +1,9 @@
 const graphql = require('graphql');
 const PageModel = require('../models/page');
+const StaffMemberModel = require('../models/StaffMember');
 const mongoose = require('mongoose');
-const PageType = require('./types');
-
+const { PageType, StaffMemberType, MediaType } = require('./types');
+const getS3Media = require('./helpers/getS3Media');
 const { GraphQLNonNull, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema, GraphQLList } = graphql;
 
 // Queries for a specific Page by ID and All Pages
@@ -35,6 +36,25 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(PageType),
       resolve(parentValue, args){
         return PageModel.find();
+      }
+    },
+    allStaff:{
+      type: new GraphQLList(StaffMemberType),
+      resolve(parentValue, args){
+        return StaffMemberModel.find();
+      }
+    },
+    allMedia:{
+      type: new GraphQLList(MediaType),
+      resolve(parentValue, args){
+        return getS3Media().then(res=>res);
+      }
+    },
+    staffById:{
+      type: StaffMemberType,
+      args: {id: {type: GraphQLString}},
+      resolve(parentValue, args){
+        return StaffMemberModel.findOne({_id:args.id});
       }
     }
   }

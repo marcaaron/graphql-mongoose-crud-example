@@ -1,9 +1,10 @@
 const graphql = require('graphql');
 const PageModel = require('../models/page');
+const StaffMemberModel = require('../models/StaffMember');
 
 const { GraphQLNonNull, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema, GraphQLList } = graphql;
 
-const PageType = require('./types');
+const { PageType, StaffMemberType } = require('./types');
 
 // Mutations to Create a Page, or Delete / Update an Existing page by ID
 // Can Create a new Page without links but all other fields are required!!!
@@ -45,6 +46,22 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parentValue, args){
         return PageModel.findByIdAndUpdate(args.id, args, {new:true});
+      }
+    },
+    addStaffMember: {
+      type: StaffMemberType,
+      args: {
+        firstName: {type: new GraphQLNonNull(GraphQLString)},
+        lastName: {type: new GraphQLNonNull(GraphQLString)},
+        dept: {type: new GraphQLNonNull(GraphQLString)},
+        description: {type: GraphQLString},
+        contact: {type: GraphQLString},
+        avatarUrl: {type: GraphQLString},
+        route: {type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve(parentValue, {firstName, lastName, dept, description, contact, avatarUrl, route}){
+        const instance = new StaffMemberModel ({ firstName, lastName, dept, description, contact, avatarUrl, route});
+        return instance.save();
       }
     }
   }
