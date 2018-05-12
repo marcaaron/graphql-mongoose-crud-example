@@ -114,6 +114,21 @@ class SiteMap extends Component{
     this.setState({addPage})
   }
 
+  handleDelete = (parentPageId, parentPageLinks, pageId) => {
+    const res = window.confirm("This action will immediately delete the selected page from the site tree, but will not delete it's associated content. Are you sure you want to do this?");
+    if(res){
+    console.log(parentPageId, pageId, parentPageLinks);
+      const links = [...parentPageLinks];
+      links.splice(links.indexOf(pageId),1);
+      console.log(links);
+      this.props.mutation(
+        {
+          variables: {id: parentPageId, links: links},
+          refetchQueries:[{query: refetch, variables:{id:parentPageId}}]
+        });
+    }
+  }
+
   handleClick = (e) => {
     // e.target.scrollIntoView({behavior:'smooth', block:'start'});
     if(e.target.dataset.children){
@@ -309,6 +324,7 @@ class SiteMap extends Component{
             handleClick={this.handleClick}
             toggle={this.state.toggle}
             addPage={this.addPage}
+            handleDelete={this.handleDelete}
           />
         </div>
         {

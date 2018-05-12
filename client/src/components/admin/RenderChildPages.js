@@ -2,10 +2,12 @@ import React, {Component} from 'react';
 import uuidv1 from 'uuid/v1';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faPlusSquare from '@fortawesome/fontawesome-free-solid/faPlusSquare';
+import EditDeleteIcons from './EditDeleteIcons';
 
 class RenderChildPages extends Component{
+
   render(){
-    const {addPage, parentPageId, parentPageLinks, parentPageTitle, handleDragLeave, handleDrop, handleDragEnd, handleDragOver, handleDragEnter, handleDragStart, childPages, handleClick, toggle} = this.props;
+    const {handleDelete, addPage, parentPageId, parentPageLinks, parentPageTitle, handleDragLeave, handleDrop, handleDragEnd, handleDragOver, handleDragEnter, handleDragStart, childPages, handleClick, toggle} = this.props;
 
       let style;
       if(toggle[`toggle_${parentPageId}`]){
@@ -47,6 +49,7 @@ class RenderChildPages extends Component{
                     <span className="sitemap-triangle">▼</span> :
                     <span className="sitemap-triangle">►</span>}
                 </span>
+                <EditDeleteIcons parentPageLinks={parentPageLinks} parentPageId={parentPageId} handleDelete={handleDelete} pageId={page.id} />
               </div>,
               <RenderChildPages
                 key={uuidv1()}
@@ -63,6 +66,7 @@ class RenderChildPages extends Component{
                 toggle={toggle}
                 handleClick={handleClick}
                 addPage={addPage}
+                handleDelete={handleDelete}
               />
             ]
             :
@@ -89,6 +93,7 @@ class RenderChildPages extends Component{
                 >
                   {page.title}
                 </span>
+                <EditDeleteIcons parentPageLinks={parentPageLinks} parentPageId={parentPageId} handleDelete={handleDelete} pageId={page.id} />
               </div>
           )}
           <div onClick={addPage} className="sitemap-add-page">

@@ -137,6 +137,10 @@ h1{
 .sitemap-child-pages, .sitemap-child-page{
   margin:0.5em;
 }
+.sitemap-child-page{
+  display:flex;
+  align-items: center;
+}
 
 .sitemap-triangle{
   padding-left:10px;
@@ -239,4 +243,18 @@ h1{
 }
 .pages-all{
   user-select: none;
+}
+
+.edit-btn, .delete-btn{
+  color:#f7f7f7;
+}
+
+.delete-btn:hover{
+  color:black;
+  transition: color 0.3s;
+}
+
+.edit-btn:hover{
+  color:black;
+  transition: color 0.3s;
 }
