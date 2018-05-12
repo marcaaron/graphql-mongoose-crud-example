@@ -19,7 +19,7 @@ query PageByRoute($route:String!){
 }
 `;
 
-const Page = ({route}) => (
+const Page = (props, {route}) => (
   <Query query={query} variables={{route}}>
       {
         ({ loading, error, data }) => {
@@ -29,6 +29,7 @@ const Page = ({route}) => (
         if(pageByRoute !== null){
           return (
             <div>
+              {props.children}
               {pageByRoute.childPages.map(page=>{
                 return <Link key={`${page.id}`} to={`${page.route}`}>{page.title}</Link>
               })}

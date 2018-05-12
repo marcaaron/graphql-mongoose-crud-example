@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import AdminAddPageForm from './AdminAddPageForm';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import Loading from './Loading';
+import Loading from '../Loading';
 import { compose } from 'react-apollo';
 
 const allPages = gql`

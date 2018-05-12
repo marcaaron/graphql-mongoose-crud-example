@@ -3,7 +3,7 @@ import axios from 'axios';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { compose } from 'react-apollo';
-import Loading from './Loading';
+import Loading from '../Loading';
 
 const addStaffMember = gql`
   mutation addStaffMember($firstName: String!, $lastName: String!, $dept: String!, $description: String, $contact: String!, $route: String!, $avatarUrl: String){

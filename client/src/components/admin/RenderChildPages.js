@@ -1,26 +1,28 @@
 import React, {Component} from 'react';
 import uuidv1 from 'uuid/v1';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faPlusSquare from '@fortawesome/fontawesome-free-solid/faPlusSquare';
 
 class RenderChildPages extends Component{
   render(){
-    const {parentPageId, parentPageLinks, parentPageTitle, handleDragLeave, handleDrop, handleDragEnd, handleDragOver, handleDragEnter, handleDragStart, childPages, handleClick, toggle} = this.props;
+    const {addPage, parentPageId, parentPageLinks, parentPageTitle, handleDragLeave, handleDrop, handleDragEnd, handleDragOver, handleDragEnter, handleDragStart, childPages, handleClick, toggle} = this.props;
 
       let style;
       if(toggle[`toggle_${parentPageId}`]){
         style = {display:'none'}
       };
-
       return (
         <div
           style={style}
-          className={`child-pages container_id_${parentPageId} toggle_${parentPageId}`}
+          className={`sitemap-child-pages container_id_${parentPageId} toggle_${parentPageId}`}
           key={uuidv1()}>
 
           {childPages.map((page, i)=>
             page.childPages && page.childPages.length > 0 ?
             [
-              <div key={uuidv1()}>
+              <div className="sitemap-child-page" key={uuidv1()}>
                 <span
+                  key={uuidv1()}
                   data-toggle={`toggle_${page.id}`}
                   onClick={handleClick}
                   id={page.id}
@@ -38,10 +40,12 @@ class RenderChildPages extends Component{
                   onDragEnd={handleDragEnd}
                   onDragEnter={handleDragEnter}
                   onDragLeave={handleDragLeave}
-                  className="page-tag"
+                  className="sitemap-page-tag"
                 >
                   {page.title}
-                  { !toggle[`toggle_${page.id}`] ? '▼' : '►' }
+                  { !toggle[`toggle_${page.id}`] ?
+                    <span className="sitemap-triangle">▼</span> :
+                    <span className="sitemap-triangle">►</span>}
                 </span>
               </div>,
               <RenderChildPages
@@ -58,11 +62,13 @@ class RenderChildPages extends Component{
                 handleDrop={handleDrop}
                 toggle={toggle}
                 handleClick={handleClick}
+                addPage={addPage}
               />
             ]
             :
-              <div key={uuidv1()}>
+              <div className="sitemap-child-page" key={uuidv1()}>
                 <span
+                  key={uuidv1()}
                   onClick={handleClick}
                   id={page.id}
                   data-children={false}
@@ -79,12 +85,16 @@ class RenderChildPages extends Component{
                   onDragEnd={handleDragEnd}
                   onDragEnter={handleDragEnter}
                   onDragLeave={handleDragLeave}
-                  className="page-tag"
+                  className="sitemap-page-tag"
                 >
                   {page.title}
                 </span>
               </div>
           )}
+          <div onClick={addPage} className="sitemap-add-page">
+            <FontAwesomeIcon style={{fontSize:'1.5em'}} color="#8edb81" icon={faPlusSquare}/>
+            Add A Page
+          </div>
         </div>
       );
   }

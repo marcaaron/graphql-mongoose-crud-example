@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { compose } from 'react-apollo';
-import Loading from './Loading';
+import Loading from '../Loading';
 
 const allMedia = gql`
 {

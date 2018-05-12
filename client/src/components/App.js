@@ -5,11 +5,8 @@ import { ApolloProvider } from "react-apollo";
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Home from './Home';
 import Page from './Page';
-import Admin from './Admin';
+import Admin from './admin/Admin';
 import Header from './Header';
-import AdminAddPage from './AdminAddPage';
-import AdminAddStaff from './AdminAddStaff';
-import AdminMedia from './AdminMedia';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
 const cache = new InMemoryCache({
@@ -27,14 +24,11 @@ class App extends Component {
       <ApolloProvider client={client}>
         <Router>
           <div className="App">
-            <Header/>
             <Switch>
-              <Route exact path="/" component={Home}/>
+              <Route exact path="/" component={()=><Home><Header/></Home>}/>
               <Route exact path="/admin" component={()=><Admin/>}/>
-              <Route exact path="/admin/add-page" component={()=><AdminAddPage/>}/>
-              <Route exact path="/admin/add-staff" component={()=><AdminAddStaff/>}/>
-              <Route exact path="/admin/media" component={()=><AdminMedia/>}/>
-              <Route path="/:page" component={({match})=><Page route={match.url}/>}/>
+              <Route exact path="/admin/:page" component={({match})=><Admin page={match.params} route={match.url}/>}/>
+              <Route path="/:page" component={({match})=><Page route={match.url}><Header/></Page>}/>
             </Switch>
           </div>
         </Router>
