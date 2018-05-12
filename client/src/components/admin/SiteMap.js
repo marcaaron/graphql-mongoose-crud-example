@@ -117,10 +117,8 @@ class SiteMap extends Component{
   handleDelete = (parentPageId, parentPageLinks, pageId) => {
     const res = window.confirm("This action will immediately delete the selected page from the site tree, but will not delete it's associated content. Are you sure you want to do this?");
     if(res){
-    console.log(parentPageId, pageId, parentPageLinks);
       const links = [...parentPageLinks];
       links.splice(links.indexOf(pageId),1);
-      console.log(links);
       this.props.mutation(
         {
           variables: {id: parentPageId, links: links},
@@ -152,7 +150,6 @@ class SiteMap extends Component{
 
   handleDrop = (e) => {
     e.stopPropagation();
-    console.log(dragSource);
     // IF IT'S A NEW PAGE....
     if(dragSource.dataset.type==="new-page"){
       if(dropSource.dataset.type !== "new-page"){
@@ -255,7 +252,6 @@ class SiteMap extends Component{
         e.target.classList.add('sitemap-page-tag-above-active');
       }else{
         if(e.target.dataset.parentid === dragSource.dataset.parentid){
-          console.log(e.target.dataset.index, dragSource.dataset.index);
           if(e.target.dataset.index > dragSource.dataset.index){
             if(Number(e.target.dataset.index) === JSON.parse(e.target.dataset.parentlinks).length-1){
               e.target.classList.add('sitemap-page-tag-below-active');
@@ -282,7 +278,6 @@ class SiteMap extends Component{
   }
 
   handleDragEnd = (e) => {
-    console.log('dragend', e.target);
       e.target.classList.remove('sitemap-page-tag-above-active');
       e.target.classList.remove('sitemap-page-tag-below-active');
       dropSource.classList.remove('sitemap-page-tag-below-active');

@@ -19,6 +19,15 @@ class Admin extends Component{
     window.addEventListener('resize', this.onResize);
   }
 
+  componentWillUpdate(nextProps){
+    console.log(this.props, nextProps);
+    if(this.props.page.page !== nextProps.page.page){
+      const currentRoute = {...this.state.currentRoute};
+      currentRoute.page = nextProps.page.page;
+      this.setState({currentRoute});
+    }
+  }
+
   onResize = () => {
     const width = window.innerWidth;
     const sideBarWidth = document.querySelector('.admin-sidebar').getBoundingClientRect().width;
@@ -38,7 +47,7 @@ class Admin extends Component{
           <AdminSideBar onResize={this.onResize} route={this.props.route}/>
           <div
             style={{width:`${this.state.mainPageWidth}px`, marginLeft:`${this.state.offsetMainPage}px`}} className="admin-page">
-            {this.state.currentRoute.page === 'sitemap' ? <SiteMap mainPageWidth={this.state.mainPageWidth}/> : 'No Site Map'}
+            {this.state.currentRoute.page === 'sitemap' ? <SiteMap mainPageWidth={this.state.mainPageWidth}/> : null}
           </div>
         </div>
       </div>
