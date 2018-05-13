@@ -1,0 +1,79 @@
+.add-page-top-level-container{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-page-container{
+  width:90%;
+  background-color: white;
+  margin:0 auto;
+  margin-top: 1.5em;
+  border-radius: 10px;
+  display:flex;
+  flex-direction: column;
+  box-shadow: 1px 1px 1px 0 black;
+  max-width: 900px;
+  min-width: 400px;
+}
+
+.add-page-header{
+  display:flex;
+  background-color: #373737;
+  color:white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.add-page-header-text{
+  font-size: 1.2em;
+  padding:0.5em;
+  font-weight: 700;
+}
+
+.add-page-input{
+  width:inherit;
+  margin:0.5em auto;
+  margin-bottom: 0.5em;
+  font-size: 1.2em;
+  padding:0.5em;
+  border-radius: 10px;
+ }
+
+.add-page-editor-wrapper{
+  width:100%;
+  margin:0 auto;
+  background-color: white;
+  display:flex;
+  flex-direction: column;
+  border-radius: 10px;
+}
+
+.add-page-editor{
+  border-width:2px;
+  border-style:inset;
+  border-color:initial;
+  background-color: white;
+  border-radius: 10px;
+  padding:0 0.5em;
+  width:98%;
+  margin: 0 auto 0.5em;
+  min-height: 300px;
+}
+
+.add-page-submit{
+  margin:0 auto;
+  padding:0.5em 1em;
+  margin:0.5em;
+  user-select: none;
+  border:solid white 5px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 2px 0 black;
+  text-align: center;
+  font-size: 2em;
+  font-weight: 900;
+  color:white;
+  background-color: #373737;
+  display:inline-block;
+}

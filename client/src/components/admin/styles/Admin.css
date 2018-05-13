@@ -6,6 +6,11 @@ h1{
   margin:0;
 }
 
+a{
+  text-decoration: none;
+  color:blue;
+}
+
 .admin-container{
   display:flex;
   flex-direction: column;
@@ -26,6 +31,9 @@ h1{
   position:fixed;
   z-index:3;
   width:100%;
+}
+.admin-header a {
+  color:white;
 }
 
 .admin-header-arrowhead-box{
@@ -101,7 +109,7 @@ h1{
 .admin-page{
   /* border:1px solid black; */
   width:100%;
-  height:100%;
+  /* height:100%; */
   z-index:0;
   margin-top:95px;
   display:flex;
@@ -246,12 +254,13 @@ h1{
 }
 
 .edit-btn, .delete-btn{
-  color:#f7f7f7;
+  color:#dbdbdb;
 }
 
 .delete-btn:hover{
   color:black;
   transition: color 0.3s;
+  cursor:pointer;
 }
 
 .edit-btn:hover{

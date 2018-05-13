@@ -45,14 +45,14 @@ class AdminSideBar extends Component{
           <span>{this.props.route === '/admin/sitemap' ? '▼' : '▶︎'}</span>
         </NavLink>
 
-        <NavLink style={hide} className="admin-sidebar-item" to="/admin/events">
-          <span>Events Listings</span>
-          <span>{this.props.route === '/admin/events' ? '▼' : '▶︎'}</span>
-        </NavLink>
-
         <NavLink style={hide} className="admin-sidebar-item" to="/admin/pages">
           <span>Pages</span>
           <span>{this.props.route === '/admin/pages' ? '▼' : '▶︎'}</span>
+        </NavLink>
+        
+        <NavLink style={hide} className="admin-sidebar-item" to="/admin/events">
+          <span>Events Listings</span>
+          <span>{this.props.route === '/admin/events' ? '▼' : '▶︎'}</span>
         </NavLink>
 
         <NavLink style={hide} className="admin-sidebar-item" to="/admin/staff">

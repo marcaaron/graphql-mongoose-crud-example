@@ -28,6 +28,7 @@ class App extends Component {
               <Route exact path="/" component={()=><Home><Header/></Home>}/>
               <Route exact path="/admin" component={()=><Admin/>}/>
               <Route exact path="/admin/:page" component={({match})=><Admin page={match.params} route={match.url}/>}/>
+              <Route exact path="/admin/pages/:page" component={({match})=><Admin page={match.params} route={match.url}/>}/>
               <Route path="/:page" component={({match})=><Page route={match.url}><Header/></Page>}/>
             </Switch>
           </div>
