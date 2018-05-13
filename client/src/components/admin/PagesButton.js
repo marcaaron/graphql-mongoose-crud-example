@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
-import faFileAlt from '@fortawesome/fontawesome-free-solid/faFileAlt';
-import faLink from '@fortawesome/fontawesome-free-solid/faLink';
-import faBoxOpen from '@fortawesome/fontawesome-free-solid/faBoxOpen';
-import faSitemap from '@fortawesome/fontawesome-free-solid/faSitemap';
+// import faFileAlt from '@fortawesome/fontawesome-free-solid/faFileAlt';
+// import faLink from '@fortawesome/fontawesome-free-solid/faLink';
+// import faBoxOpen from '@fortawesome/fontawesome-free-solid/faBoxOpen';
+// import faSitemap from '@fortawesome/fontawesome-free-solid/faSitemap';
 import {Link} from 'react-router-dom';
 
 class PagesButton extends Component{

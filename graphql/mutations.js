@@ -17,10 +17,13 @@ const mutation = new GraphQLObjectType({
         title: {type: new GraphQLNonNull(GraphQLString)},
         content: {type: GraphQLString},
         route: {type: new GraphQLNonNull(GraphQLString)},
-        links:{type: GraphQLList(GraphQLString)}
+        pageType: {type: new GraphQLNonNull(GraphQLString)},
+        pageLinks:{type: GraphQLList(GraphQLString)},
+        dateCreated:{type: new GraphQLNonNull(GraphQLString)},
+        lastModified:{type: new GraphQLNonNull(GraphQLString)}
       },
-      resolve(parentValue, {title, content, route}){
-        const instance = new PageModel({ title: title, content:content, route:route});
+      resolve(parentValue, {title, content, route, dateCreated, lastModified, pageType}){
+        const instance = new PageModel({ title, content, route, dateCreated, lastModified, pageType});
         return instance.save();
       }
     },
@@ -34,7 +37,7 @@ const mutation = new GraphQLObjectType({
         return PageModel.findByIdAndRemove(id);
       }
     },
-    // Update by ID
+    // Update by ID - pageType & dateCreated are immutable - a page's type can not be changed once instantiated
     updatePage: {
       type: PageType,
       args: {
@@ -42,7 +45,9 @@ const mutation = new GraphQLObjectType({
         title: {type: GraphQLString},
         content: {type: GraphQLString},
         route: {type: GraphQLString},
-        links:{type: GraphQLList(GraphQLString)}
+        links:{type: GraphQLList(GraphQLString)},
+        pageLinks:{type: GraphQLList(GraphQLString)},
+        lastModified:{type: new GraphQLNonNull(GraphQLString)}
       },
       resolve(parentValue, args){
         return PageModel.findByIdAndUpdate(args.id, args, {new:true});
