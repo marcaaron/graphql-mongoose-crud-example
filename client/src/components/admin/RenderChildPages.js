@@ -3,11 +3,64 @@ import uuidv1 from 'uuid/v1';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faPlusSquare from '@fortawesome/fontawesome-free-solid/faPlusSquare';
 import EditDeleteIcons from './EditDeleteIcons';
+import Modal from 'react-modal';
+import faWindowClose from '@fortawesome/fontawesome-free-solid/faWindowClose';
+import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+    overflow              : 'scroll',
+    height                : '50%',
+    width                 : '50%',
+    borderRadius          : '10px',
+    boxShadow             : '1px 1px 1px 0 rgba(0,0,0,0.5)',
+    padding:0
+  }
+};
+
+Modal.setAppElement('#root');
 
 class RenderChildPages extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      modalIsOpen: false,
+      linkSearchQuery: '',
+      pages: props.allPages
+    }
+  }
+
+  // Modal Functions
+
+  openModal = () => {
+    this.setState({modalIsOpen: true});
+  }
+
+  afterOpenModal = () => {
+    // references are now sync'd and can be accessed.
+    this.subtitle.style.color = '#f00';
+  }
+
+  closeModal = () => {
+    this.setState({modalIsOpen: false});
+  }
+
+  handleSearchQuery = (e) => {
+    const linkSearchQuery = e.target.value;
+    const regexp = new RegExp(linkSearchQuery, "gi");
+    let pages = [...this.props.allPages];
+    pages = pages.filter(page=>regexp.test(page.title));
+    this.setState({linkSearchQuery, pages});
+  }
 
   render(){
-    const {handleDelete, addPage, parentPageId, parentPageLinks, parentPageTitle, handleDragLeave, handleDrop, handleDragEnd, handleDragOver, handleDragEnter, handleDragStart, childPages, handleClick, toggle} = this.props;
+    const {allPages, addLink, handleDelete, parentPageId, parentPageLinks, parentPageTitle, handleDragLeave, handleDrop, handleDragEnd, handleDragOver, handleDragEnter, handleDragStart, childPages, handleClick, toggle} = this.props;
 
       let style;
       if(toggle[`toggle_${parentPageId}`]){
@@ -16,8 +69,7 @@ class RenderChildPages extends Component{
       return (
         <div
           style={style}
-          className={`sitemap-child-pages container_id_${parentPageId} toggle_${parentPageId}`}
-          key={uuidv1()}>
+          className={`sitemap-child-pages container_id_${parentPageId} toggle_${parentPageId}`}>
 
           {childPages.map((page, i)=>
             page.childPages && page.childPages.length > 0 ?
@@ -66,8 +118,9 @@ class RenderChildPages extends Component{
                 handleDrop={handleDrop}
                 toggle={toggle}
                 handleClick={handleClick}
-                addPage={addPage}
                 handleDelete={handleDelete}
+                allPages={allPages}
+                addLink={addLink}
               />
             ]
             :
@@ -97,10 +150,41 @@ class RenderChildPages extends Component{
                 <EditDeleteIcons type="sitemap" parentPageLinks={parentPageLinks} parentPageId={parentPageId} handleDelete={handleDelete} pageId={page.id} />
               </div>
           )}
-          <div onClick={addPage} className="sitemap-add-page">
+          <div onClick={this.openModal} className="sitemap-add-page">
             <FontAwesomeIcon style={{fontSize:'1.5em'}} color="#8edb81" icon={faPlusSquare}/>
             Add A Page
           </div>
+          <Modal
+            isOpen={this.state.modalIsOpen}
+            onAfterOpen={this.afterOpenModal}
+            onRequestClose={this.closeModal}
+            style={customStyles}
+            contentLabel="Example Modal"
+          >
+            <div className="modal-content">
+              <h2 className="edit-site-modal-header" ref={subtitle => this.subtitle = subtitle}>
+                Add A Page
+                <FontAwesomeIcon className="modal-close-btn" icon={faWindowClose} onClick={this.closeModal}/>
+              </h2>
+              <div className="modal-filter">
+                <div className="modal-filter-text">Filter Pages:</div>
+                <form className="modal-filter-form" onSubmit={(e)=>e.preventDefault()}>
+                  <input ref="modalInput" className="modal-filter-input" onChange={this.handleSearchQuery} value={this.state.linkSearchQuery} />
+                </form>
+              </div>
+              <div className="edit-site-modal-links">
+                {this.state.pages.length>0 && this.state.pages.map(page=> page.id !== parentPageId &&
+                  <div className="edit-site-modal-link"
+                    onClick={()=>addLink(page.id, parentPageId, parentPageLinks)}
+                    key={`modal-links-${page.id}`}
+                    >
+                    <FontAwesomeIcon style={{margin:'0.5em'}} icon={faPlusCircle}/>
+                    <div>{page.title}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Modal>
         </div>
       );
   }

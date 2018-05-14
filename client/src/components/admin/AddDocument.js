@@ -121,7 +121,7 @@ class AddDocument extends Component{
   }
 
   render(){
-    const { pageTitle, invalidTitle, invalidDocument, documentUrl, success, successResult } = this.state;
+    const { pageTitle, invalidTitle, documentUrl, success, successResult } = this.state;
     let btnStyle = {};
     if(invalidTitle){
       btnStyle = {backgroundColor:'grey', color:'darkgrey'};

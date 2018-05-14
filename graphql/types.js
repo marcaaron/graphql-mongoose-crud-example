@@ -11,7 +11,7 @@ const { GraphQLNonNull, GraphQLScalarType, GraphQLObjectType, GraphQLInt, GraphQ
   // Page Links = an array of page ids to populate the PageLinksInfo field
     // Although these can be queried in a nested fashion contrary to child pages we don't really want to ever do this...
   // LINKS ARE USED FOR SITEMAP & PAGE LINKS ARE PHYSICAL LINKS DISPLAYED IN A SIDE BAR!!
-  
+
 const PageType = new GraphQLObjectType({
   name:'Page',
   fields: () => ({

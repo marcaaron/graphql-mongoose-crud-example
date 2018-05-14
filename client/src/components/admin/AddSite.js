@@ -120,10 +120,6 @@ class AddSite extends Component{
               />
           </div>
           <button style={btnStyle} onClick={this.handleSubmitClick} className="add-page-submit">SUBMIT</button>
-          {/* <textarea
-            disabled
-            value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-          /> */}
         </div>
       );
     }else{

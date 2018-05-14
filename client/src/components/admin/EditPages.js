@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import './styles/Pages.css';
-import PagesButton from './PagesButton';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 import { graphql } from 'react-apollo';
@@ -8,7 +7,6 @@ import gql from 'graphql-tag';
 import Loading from '../Loading';
 import EditDeleteIcons from './EditDeleteIcons';
 import { compose } from 'react-apollo';
-import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 const allPages = gql`
@@ -67,6 +65,7 @@ class EditPages extends Component{
     let query = new RegExp(pageQuery, "gi");
     allPages = allPages.filter(page=>{
       if(query.test(page.title) || query.test(page.pageType)) return true;
+      return false;
     })
     this.setState({pageQuery, allPages});
   }

@@ -55,6 +55,7 @@ class Admin extends Component{
   }
 
   render(){
+    console.log(this.props.page.page);
     return(
       <div className="admin-container">
         <header className="admin-header">

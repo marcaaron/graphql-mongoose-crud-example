@@ -48,12 +48,9 @@ class AddLink extends Component{
 
   onTitleChange = (e) => {
     let pageTitle = e.target.value;
-    if(/[^\w\s]/.test(pageTitle)){
-      pageTitle = this.state.pageTitle;
-    }
     const pages = this.props.allPages.allPages;
     let invalidTitle = false;
-    if(pageTitle !== '' && pages.filter(page=>page.title.toLowerCase() === pageTitle.toLowerCase()).length > 0){
+    if(pages.filter(page=>page.title.toLowerCase() === pageTitle.toLowerCase()).length > 0){
       invalidTitle = true;
     }
     this.setState({

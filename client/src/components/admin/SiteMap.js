@@ -9,10 +9,11 @@ let dragSource = null;
 let dropSource = null;
 
 const mutation =  gql`
-  mutation UpdatePage($id: String!, $links:[String]!){
-  updatePage(id:$id, links:$links){
+  mutation UpdatePage($id: String!, $links:[String]!, $lastModified:String!){
+  updatePage(id:$id, links:$links, lastModified:$lastModified){
     id
     links
+    lastModified
     childPages{
       id
       links
@@ -103,14 +104,23 @@ class SiteMap extends Component{
     this.state = {
       toggle: {
         toggle_Home: false
-      },
-      addPage: false
+      }
     }
   }
 
-  addPage = () => {
-    const addPage = !this.state.addPage;
-    this.setState({addPage})
+  addLink = (pageId, parentPageId, parentPageLinks) => {
+    console.log(pageId, parentPageId, parentPageLinks);
+    // MAKE A COPY OF THE SHARED LINKS
+    const links = [...parentPageLinks];
+    // SPLICE THE ID OUT OF THE CURRENT INDEX OF DRAG SOURCE
+    links.push(pageId);
+    const lastModified = new Date().toISOString();
+    // CALL MUTATION AND PASS LINKS & CHILD PAGES
+    this.props.mutation(
+      {
+        variables: {id: parentPageId, links, lastModified},
+        refetchQueries:[{query: refetch, variables:{id:parentPageId}}]
+      });
   }
 
   handleDelete = (parentPageId, parentPageLinks, pageId) => {
@@ -118,9 +128,10 @@ class SiteMap extends Component{
     if(res){
       const links = [...parentPageLinks];
       links.splice(links.indexOf(pageId),1);
+      const lastModified = new Date().toISOString();
       this.props.mutation(
         {
-          variables: {id: parentPageId, links: links},
+          variables: {id: parentPageId, links: links, lastModified},
           refetchQueries:[{query: refetch, variables:{id:parentPageId}}]
         });
     }
@@ -165,9 +176,10 @@ class SiteMap extends Component{
           const links = [...drpSrc.parentlinks];
           links.splice(drpSrc.indexInLinks, 0, dragSource.dataset.id);
           // CALL MUTATION AND PASS LINKS & CHILD PAGES
+          const lastModified = new Date().toISOString();
           this.props.mutation(
             {
-              variables: {id: drpSrc.parentid, links: links},
+              variables: {id: drpSrc.parentid, links: links, lastModified},
               refetchQueries:[{query: refetch, variables:{id:drpSrc.parentid}}]
             });
         }
@@ -221,14 +233,17 @@ class SiteMap extends Component{
           return null;
         }
 
+        const lastModified = new Date().toISOString();
+
         // CALL MUTATION AND PASS LINKS & CHILD PAGES
         this.props.mutation(
           {
-            variables: {id: drpSrc.parentid, links: links},
+            variables: {id: drpSrc.parentid, links: links, lastModified},
             optimisticResponse: {
               updatePage:{
                 id: drpSrc.parentid,
                 links: links,
+                lastModified,
                 childPages: searchTree(drpSrc.parentid, data.pageByTitle, drgSrc.indexInLinks, drpSrc.indexInLinks),
                 __typename:'Page'
               },
@@ -286,6 +301,7 @@ class SiteMap extends Component{
 
   render(){
     if(this.props.pageByTitle.loading) return <Loading/>;
+    if(this.props.allPages.loading) return <Loading/>;
     const {title, id, links, childPages} = this.props.pageByTitle.pageByTitle;
     return(
       <div className="admin-pages-container" style={{textAlign:"left"}}>
@@ -317,23 +333,11 @@ class SiteMap extends Component{
             handleDrop={this.handleDrop}
             handleClick={this.handleClick}
             toggle={this.state.toggle}
-            addPage={this.addPage}
             handleDelete={this.handleDelete}
+            allPages={this.props.allPages.allPages}
+            addLink={this.addLink}
           />
         </div>
-        {
-          this.state.addPage &&
-          <AdminPagesAll
-            mainPageWidth={this.props.mainPageWidth}
-            allPages={this.props.allPages.allPages}
-            handleDragLeave={this.handleDragLeave}
-            handleDragStart={this.handleDragStart}
-            handleDragOver={this.handleDragOver}
-            handleDragEnd={this.handleDragEnd}
-            handleDragEnter={this.handleDragEnter}
-            handleDrop={this.handleDrop}
-          />
-        }
       </div>
     );
   }
