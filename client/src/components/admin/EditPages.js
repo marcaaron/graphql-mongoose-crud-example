@@ -46,17 +46,27 @@ class EditPages extends Component{
     super(props);
     this.state = {
       pageQuery:'',
-      queryFail: false
+      queryFail: false,
+      allPages: []
     }
   }
 
-  componentDidMount(){
-    console.log(moment);
+  componentWillUpdate(nextProps){
+    if(JSON.stringify(this.props.allPages.allPages) !== JSON.stringify(nextProps.allPages.allPages)){
+      const allPages = [...nextProps.allPages.allPages];
+      console.log(allPages);
+      this.setState({allPages});
+    }
   }
 
   handleSearchChange = (e) => {
     const pageQuery = e.target.value;
-    this.setState({pageQuery});
+    let allPages = [...this.props.allPages.allPages];
+    let query = new RegExp(pageQuery, "gi");
+    allPages = allPages.filter(page=>{
+      if(query.test(page.title) || query.test(page.pageType)) return true;
+    })
+    this.setState({pageQuery, allPages});
   }
 
   handleDelete = (pageId) => {
@@ -83,12 +93,11 @@ class EditPages extends Component{
   render(){
     const {queryFail, pageQuery} = this.state;
     const flexTwo = {flex:'2'};
-    if(this.props.data) console.log(this.props.data);
     return(
       <div className="add-page-top-level-container">
         <div className="add-page-container">
           <div className="add-page-header">
-            <span className="add-page-header-text">SEARCH FOR AN EXISTING PAGE:</span>
+            <span className="add-page-header-text">FILTER EXISTING PAGES:</span>
           </div>
           <div style={{display:'flex', alignItems:'center', justifyContent:'space-around'}}>
             <FontAwesomeIcon icon={faSearch} style={{margin:'1em'}}/>
@@ -115,12 +124,12 @@ class EditPages extends Component{
             <span className="add-page-header-text">Edit/Delete</span>
           </div>
           {this.props.allPages.loading ? <Loading/> :
-            this.props.allPages.allPages.map(page=>
+            this.state.allPages.map(page=>
           <div key={page.id} className="edit-page-row">
             <span style={flexTwo} className="edit-page-row-text row-title">{page.title}</span>
             <span style={flexTwo} className="edit-page-row-text row-route">{page.route}</span>
             <span className="edit-page-row-text row-type">{page.pageType}</span>
-            <span className="edit-page-row-text row-created">{page.dateCreated}</span>
+            <span className="edit-page-row-text row-created">{moment(page.dateCreated).format('MM-DD-YYYY')}</span>
             <span className="edit-page-row-text row-modified">{moment(page.lastModified).format('MM-DD-YYYY')}</span>
             <span className="edit-page-row-text row-edit-delete">
               <EditDeleteIcons type="edit" pageId={page.id} handleDelete={this.handleDelete}/>
