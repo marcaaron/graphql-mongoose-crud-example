@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter, Link } from 'react-router-dom';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch';
 import faAngleDoubleLeft from '@fortawesome/fontawesome-free-solid/faAngleDoubleLeft';
 import faAngleDoubleRight from '@fortawesome/fontawesome-free-solid/faAngleDoubleRight';
+import uuidv1 from 'uuid/v1';
 
 class AdminSideBar extends Component{
 
@@ -47,9 +48,21 @@ class AdminSideBar extends Component{
 
         <NavLink style={hide} className="admin-sidebar-item" to="/admin/pages">
           <span>Pages</span>
-          <span>{this.props.route === '/admin/pages' ? '▼' : '▶︎'}</span>
+          <span>{(this.props.route === '/admin/pages' || this.props.route === '/admin/pages/edit') ? '▼' : '▶︎'}</span>
         </NavLink>
-        
+        {(this.props.route === '/admin/pages' || this.props.route === '/admin/pages/edit') &&
+          [
+            <Link key={uuidv1()} style={hide} className="admin-sidebar-item" to="/admin/pages">
+            <span>– Add New Page</span>
+            <span>{this.props.route === '/admin/pages' ? '▼' : '▶︎'}</span>
+            </Link>,
+            <Link key={uuidv1()} style={hide} className="admin-sidebar-item" to="/admin/pages/edit">
+              <span>– Update Existing Pages</span>
+              <span>{this.props.route === '/admin/pages/edit' ? '▼' : '▶︎'}</span>
+            </Link>
+          ]
+        }
+
         <NavLink style={hide} className="admin-sidebar-item" to="/admin/events">
           <span>Events Listings</span>
           <span>{this.props.route === '/admin/events' ? '▼' : '▶︎'}</span>
@@ -89,4 +102,4 @@ class AdminSideBar extends Component{
   }
 }
 
-export default AdminSideBar;
+export default withRouter(AdminSideBar);

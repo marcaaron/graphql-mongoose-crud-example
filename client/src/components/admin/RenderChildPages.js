@@ -49,7 +49,8 @@ class RenderChildPages extends Component{
                     <span className="sitemap-triangle">▼</span> :
                     <span className="sitemap-triangle">►</span>}
                 </span>
-                <EditDeleteIcons parentPageLinks={parentPageLinks} parentPageId={parentPageId} handleDelete={handleDelete} pageId={page.id} />
+                <EditDeleteIcons
+                  type="sitemap" parentPageLinks={parentPageLinks} parentPageId={parentPageId} handleDelete={handleDelete} pageId={page.id} />
               </div>,
               <RenderChildPages
                 key={uuidv1()}
@@ -93,7 +94,7 @@ class RenderChildPages extends Component{
                 >
                   {page.title}
                 </span>
-                <EditDeleteIcons parentPageLinks={parentPageLinks} parentPageId={parentPageId} handleDelete={handleDelete} pageId={page.id} />
+                <EditDeleteIcons type="sitemap" parentPageLinks={parentPageLinks} parentPageId={parentPageId} handleDelete={handleDelete} pageId={page.id} />
               </div>
           )}
           <div onClick={addPage} className="sitemap-add-page">

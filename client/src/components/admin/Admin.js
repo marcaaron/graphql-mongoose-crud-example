@@ -3,14 +3,15 @@ import AdminSideBar from './AdminSideBar';
 import './styles/Admin.css';
 import DecorativeBorder from './DecorativeBorder';
 import {Link} from 'react-router-dom';
-import AddSite from './AddSite';
-import AddLink from './AddLink';
-import AddDocument from './AddDocument';
-import AddContainer from './AddContainer';
 
 //Admin Sub Pages Components
 import SiteMap from './SiteMap';
 import Pages from './Pages';
+import EditPages from './EditPages';
+import AddSite from './AddSite';
+import AddLink from './AddLink';
+import AddDocument from './AddDocument';
+import AddContainer from './AddContainer';
 
 class Admin extends Component{
   constructor(props){
@@ -80,7 +81,8 @@ class Admin extends Component{
             <AddLink mainPageWidth={this.state.mainPageWidth}/> : null}
             {this.state.currentRoute && this.state.currentRoute.page === 'add-document' ?
             <AddDocument mainPageWidth={this.state.mainPageWidth}/> : null}
-
+            {this.state.currentRoute && this.state.currentRoute.page === 'edit' ?
+            <EditPages mainPageWidth={this.state.mainPageWidth}/> : null}
           </div>
         </div>
       </div>

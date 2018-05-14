@@ -161,7 +161,7 @@ class AddDocument extends Component{
             <div className="add-page-document-drop">
               <FontAwesomeIcon color="#FF7676" size="4x" icon={faFilePdf}/>
               <span className="add-page-document-success-text">
-                <a href={this.state.documentUrl}>{this.state.documentUrl}</a>
+                <a rel="noopener noreferrer" target="_blank" href={this.state.documentUrl}>{this.state.documentUrl}</a>
               </span>
             </div>
             <label htmlFor="file-input" className="add-page-document-choose-btn">

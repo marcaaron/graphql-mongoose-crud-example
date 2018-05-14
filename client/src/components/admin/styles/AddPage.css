@@ -30,6 +30,7 @@
   font-size: 1.2em;
   padding:0.5em;
   font-weight: 700;
+  flex:1;
 }
 
 .add-page-input{
@@ -118,4 +119,21 @@ input[type="file"] {
 
 .add-page-document-success-text{
   font-size: 1em;
+}
+
+.edit-page-row{
+  display:flex;
+  background-color: white;
+  color:black;
+  border-bottom: solid 1px lightgrey;
+}
+.edit-page-row:last-child{
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.edit-page-row-text{
+  font-size: 1.2em;
+  padding:0.5em;
+  flex:1;
 }
