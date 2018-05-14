@@ -30,8 +30,6 @@ class Admin extends Component{
   }
 
   componentWillUpdate(nextProps){
-    console.log(this.props, nextProps);
-
     if(this.props.page){
       if(this.props.page.page !== nextProps.page.page){
         const currentRoute = {...this.state.currentRoute};

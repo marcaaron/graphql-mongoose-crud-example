@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './styles/AddPage.css';
-import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import './styles/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
@@ -49,30 +49,29 @@ class AddSite extends Component{
   };
 
   onTitleChange = (e) => {
-    console.log(this.props);
-    const pageTitle = e.target.value;
+    let pageTitle = e.target.value;
     const pages = this.props.allPages.allPages;
     let invalidTitle = false;
     if(pages.filter(page=>page.title.toLowerCase() === pageTitle.toLowerCase()).length > 0){
       invalidTitle = true;
     }
-
     this.setState({
       pageTitle,
       invalidTitle
     });
   };
 
+
   handleSubmitClick = () => {
     if(!this.state.invalidTitle){
       const content = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()));
       const title = this.state.pageTitle;
       let route = '/'
-      route += slugify(title).toLowerCase();
+      const cleanTitle = title.split(' ').map(word => word.replace(/\W|_|@|\$|\(|\)/g,'')).join(' ');
+      route += slugify(cleanTitle).toLowerCase();
       const date = new Date().toISOString();
       const dateCreated = date;
       const lastModified = date;
-      console.log(dateCreated, lastModified);
       const pageType = 'site';
        this.props.mutation(
          {

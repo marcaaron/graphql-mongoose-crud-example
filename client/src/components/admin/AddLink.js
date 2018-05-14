@@ -3,7 +3,6 @@ import './styles/AddPage.css';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { compose } from 'react-apollo';
-import slugify from 'slugify';
 import { Link } from 'react-router-dom';
 
 const mutation = gql`
@@ -48,19 +47,21 @@ class AddLink extends Component{
   };
 
   onTitleChange = (e) => {
-    console.log(this.props);
-    const pageTitle = e.target.value;
+    let pageTitle = e.target.value;
+    if(/[^\w\s]/.test(pageTitle)){
+      pageTitle = this.state.pageTitle;
+    }
     const pages = this.props.allPages.allPages;
     let invalidTitle = false;
-    if(pages.filter(page=>page.title.toLowerCase() === pageTitle.toLowerCase()).length > 0){
+    if(pageTitle !== '' && pages.filter(page=>page.title.toLowerCase() === pageTitle.toLowerCase()).length > 0){
       invalidTitle = true;
     }
-
     this.setState({
       pageTitle,
       invalidTitle
     });
   };
+
 
   handleSubmitClick = () => {
     if(!this.state.invalidTitle && !this.state.invalidLink){

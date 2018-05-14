@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import './styles/Pages.css';
 import PagesButton from './PagesButton';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 import faFileAlt from '@fortawesome/fontawesome-free-solid/faFileAlt';
 import faLink from '@fortawesome/fontawesome-free-solid/faLink';
 import faBoxOpen from '@fortawesome/fontawesome-free-solid/faBoxOpen';
