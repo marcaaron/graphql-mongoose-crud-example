@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import RenderChildPages from "./RenderChildPages";
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import Loading from '../Loading';
-import { compose } from 'react-apollo';
 import AdminPagesAll from './AdminPagesAll';
 
 let dragSource = null;

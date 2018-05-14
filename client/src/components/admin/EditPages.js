@@ -47,12 +47,14 @@ class EditPages extends Component{
     this.state = {
       pageQuery:'',
       queryFail: false,
-      allPages: []
+      allPages: props.allPages.allPages || []
     }
   }
 
   componentWillUpdate(nextProps){
-    if(JSON.stringify(this.props.allPages.allPages) !== JSON.stringify(nextProps.allPages.allPages)){
+    console.log('component will update');
+
+    if((JSON.stringify(this.props.allPages.allPages) !== JSON.stringify(nextProps.allPages.allPages))){
       const allPages = [...nextProps.allPages.allPages];
       console.log(allPages);
       this.setState({allPages});
