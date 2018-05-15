@@ -176,6 +176,11 @@ input[type="file"] {
   align-items: center;
   justify-content: space-between;
 }
+
+.row-route{
+  overflow: scroll; 
+}
+
 .modal-content{
   height:100%;
   width:100%;

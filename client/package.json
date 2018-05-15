@@ -9,6 +9,7 @@
     "apollo-cache-inmemory": "^1.2.1",
     "axios": "^0.18.0",
     "draft-js": "^0.10.5",
+    "draft-js-import-html": "^1.2.1",
     "draftjs-to-html": "^0.8.3",
     "graphql-tag": "^2.9.2",
     "html-react-parser": "^0.4.3",

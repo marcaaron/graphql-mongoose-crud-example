@@ -32,14 +32,18 @@ class RenderChildPages extends Component{
     this.state = {
       modalIsOpen: false,
       linkSearchQuery: '',
-      pages: props.allPages
+      pages: props.allPages,
+      currentPageId:'',
+      currentPageLinks:''
     }
   }
 
   // Modal Functions
 
-  openModal = () => {
-    this.setState({modalIsOpen: true});
+  openModal = (pageId, pageLinks) => {
+    const currentPageId = pageId;
+    const currentPageLinks = pageLinks;
+    this.setState({modalIsOpen: true, currentPageId, currentPageLinks});
   }
 
   afterOpenModal = () => {
@@ -57,6 +61,11 @@ class RenderChildPages extends Component{
     let pages = [...this.props.allPages];
     pages = pages.filter(page=>regexp.test(page.title));
     this.setState({linkSearchQuery, pages});
+  }
+
+  handleAddLink = (pageId, parentPageId, parentPageLinks) => {
+    this.props.addLink(pageId, parentPageId, parentPageLinks);
+    this.closeModal();
   }
 
   render(){
@@ -148,9 +157,13 @@ class RenderChildPages extends Component{
                   {page.title}
                 </span>
                 <EditDeleteIcons type="sitemap" parentPageLinks={parentPageLinks} parentPageId={parentPageId} handleDelete={handleDelete} pageId={page.id} />
+                <div onClick={()=>this.openModal(page.id, page.links)} className="sitemap-add-page">
+                  <FontAwesomeIcon style={{fontSize:'1.5em'}} color="#8edb81" icon={faPlusSquare}/>
+                  Add A Page
+                </div>
               </div>
           )}
-          <div onClick={this.openModal} className="sitemap-add-page">
+          <div onClick={()=>this.openModal(parentPageId, parentPageLinks)} className="sitemap-add-page">
             <FontAwesomeIcon style={{fontSize:'1.5em'}} color="#8edb81" icon={faPlusSquare}/>
             Add A Page
           </div>
@@ -173,9 +186,9 @@ class RenderChildPages extends Component{
                 </form>
               </div>
               <div className="edit-site-modal-links">
-                {this.state.pages.length>0 && this.state.pages.map(page=> page.id !== parentPageId &&
+                {this.state.pages.length>0 && this.state.pages.map(page=> page.id !== this.state.currentPageId &&
                   <div className="edit-site-modal-link"
-                    onClick={()=>addLink(page.id, parentPageId, parentPageLinks)}
+                    onClick={()=>this.handleAddLink(page.id, this.state.currentPageId, this.state.currentPageLinks)}
                     key={`modal-links-${page.id}`}
                     >
                     <FontAwesomeIcon style={{margin:'0.5em'}} icon={faPlusCircle}/>

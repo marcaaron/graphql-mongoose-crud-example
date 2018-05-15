@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import './styles/AddPage.css';
-import slugify from 'slugify';
 
 class EditLink extends Component{
   constructor(props){

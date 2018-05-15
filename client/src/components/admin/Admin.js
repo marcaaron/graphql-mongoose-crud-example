@@ -55,7 +55,6 @@ class Admin extends Component{
   }
 
   render(){
-    console.log(this.props.page.page);
     return(
       <div className="admin-container">
         <header className="admin-header">
@@ -85,7 +84,7 @@ class Admin extends Component{
             <AddDocument mainPageWidth={this.state.mainPageWidth}/> : null}
             {this.state.currentRoute && this.state.currentRoute.page === 'edit' ?
             <EditPages mainPageWidth={this.state.mainPageWidth}/> : null}
-            {this.props.route === `/admin/pages/edit/${this.props.page.page}` ?
+            {this.props.page && this.props.route === `/admin/pages/edit/${this.props.page.page}` ?
             <EditPage pageId={this.props.page.page} mainPageWidth={this.state.mainPageWidth}/> : null}
           </div>
         </div>

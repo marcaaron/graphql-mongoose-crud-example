@@ -128,7 +128,9 @@ class EditPages extends Component{
             this.state.allPages.map(page=>
           <div key={page.id} className="edit-page-row">
             <span style={flexTwo} className="edit-page-row-text row-title">{page.title}</span>
-            <span style={flexTwo} className="edit-page-row-text row-route">{page.route}</span>
+            <span style={flexTwo} className="edit-page-row-text row-route">
+              {page.route}
+            </span>
             <span className="edit-page-row-text row-type">{page.pageType}</span>
             <span className="edit-page-row-text row-created">{moment(page.dateCreated).format('MM-DD-YYYY')}</span>
             <span className="edit-page-row-text row-modified">{moment(page.lastModified).format('MM-DD-YYYY')}</span>

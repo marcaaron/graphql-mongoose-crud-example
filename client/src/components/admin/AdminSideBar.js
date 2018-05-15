@@ -48,9 +48,19 @@ class AdminSideBar extends Component{
 
         <NavLink style={hide} className="admin-sidebar-item" to="/admin/pages">
           <span>Pages</span>
-          <span>{(this.props.route === '/admin/pages' || this.props.route === '/admin/pages/edit') ? '▼' : '▶︎'}</span>
+          <span>
+            {
+              (this.props.route === '/admin/pages' ||
+              this.props.route === '/admin/pages/edit' ||
+              this.props.route === `/admin/pages/edit/${this.props.match.params.page}`
+              ) ? '▼' : '▶︎'
+            }
+          </span>
         </NavLink>
-        {(this.props.route === '/admin/pages' || this.props.route === '/admin/pages/edit') &&
+        {
+          (this.props.route === '/admin/pages' ||
+            this.props.route === '/admin/pages/edit' ||
+            this.props.route === `/admin/pages/edit/${this.props.match.params.page}`) &&
           [
             <Link key={uuidv1()} style={hide} className="admin-sidebar-item" to="/admin/pages">
             <span>– Add New Page</span>
@@ -58,7 +68,11 @@ class AdminSideBar extends Component{
             </Link>,
             <Link key={uuidv1()} style={hide} className="admin-sidebar-item" to="/admin/pages/edit">
               <span>– Update Existing Pages</span>
-              <span>{this.props.route === '/admin/pages/edit' ? '▼' : '▶︎'}</span>
+              <span>{
+                (
+                  this.props.route === '/admin/pages/edit' ||  this.props.route===`/admin/pages/edit/${this.props.match.params.page}`
+                ) ? '▼' : '▶︎'
+              }</span>
             </Link>
           ]
         }

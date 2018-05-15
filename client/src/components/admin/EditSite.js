@@ -12,6 +12,61 @@ import faWindowClose from '@fortawesome/fontawesome-free-solid/faWindowClose';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome';
 
+function getSignedRequest(file){
+  return new Promise((resolve,reject)=>{
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `http://localhost:4000/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+    xhr.onreadystatechange = () => {
+      if(xhr.readyState === 4){
+        if(xhr.status === 200){
+          const response = JSON.parse(xhr.responseText);
+          resolve(response);
+        }
+        else{
+          reject('Could not get signed URL.');
+        }
+      }
+    };
+    xhr.send();
+  });
+}
+
+function uploadFile(file, signedRequest, url){
+  return new Promise((resolve,reject)=>{
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', signedRequest);
+    xhr.onreadystatechange = () => {
+      if(xhr.readyState === 4){
+        if(xhr.status === 200){
+          resolve(url);
+        }
+        else{
+          reject('Could not upload file.');
+        }
+      }
+    };
+    xhr.send(file);
+  })
+}
+
+function uploadImageCallBack(file) {
+  return new Promise(
+    (resolve, reject) => {
+      getSignedRequest(file)
+      .then(
+        res=>
+        uploadFile(file, res.signedRequest, res.url)
+        .then(res=>
+          resolve({data:{link:res}})
+        )
+        .catch(err=>reject(err))
+      )
+      .catch(err=>reject(err));
+    },
+  );
+}
+
+
 const customStyles = {
   content : {
     top                   : '50%',
@@ -34,7 +89,12 @@ Modal.setAppElement('#root');
 class EditSite extends Component{
   constructor(props){
     super(props);
-    const contentBlock = htmlToDraft(props.pageById.content);
+    let html = props.pageById.content;
+    if(/^<img/.test(html)){
+      html = `<p>${html}`;
+    }
+    console.log(html);
+    const contentBlock = htmlToDraft(html);
     let contentState, editorState;
     if(contentBlock){
       contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
@@ -164,6 +224,13 @@ class EditSite extends Component{
               editorClassName="add-page-editor"
               editorState={editorState}
               onEditorStateChange={this.onEditorStateChange}
+              toolbar={{
+                image: {
+                  previewImage: true,
+                  uploadCallback: uploadImageCallBack,
+                  alt: { present: true, mandatory: false },
+                },
+              }}
             />
         </div>
         <div className="add-page-container">

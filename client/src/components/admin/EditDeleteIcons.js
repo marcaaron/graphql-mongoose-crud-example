@@ -6,7 +6,6 @@ import {Link} from 'react-router-dom';
 
 class EditDeleteIcons extends Component{
   render(){
-    console.log(this.props.pageId);
     if(this.props.type==='sitemap'){
       const {parentPageLinks, pageId, parentPageId, handleDelete} = this.props;
       return(

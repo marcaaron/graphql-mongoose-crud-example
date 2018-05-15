@@ -3,7 +3,6 @@ import RenderChildPages from "./RenderChildPages";
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import Loading from '../Loading';
-import AdminPagesAll from './AdminPagesAll';
 
 let dragSource = null;
 let dropSource = null;
@@ -14,6 +13,7 @@ const mutation =  gql`
     id
     links
     lastModified
+    title
     childPages{
       id
       links
@@ -119,7 +119,7 @@ class SiteMap extends Component{
     this.props.mutation(
       {
         variables: {id: parentPageId, links, lastModified},
-        refetchQueries:[{query: refetch, variables:{id:parentPageId}}]
+        refetchQueries:[{query: refetch, variables:{id:parentPageId}}, {query: pageByTitle}]
       });
   }
 
@@ -187,6 +187,7 @@ class SiteMap extends Component{
     }else{
       // IF PAGE IS ALREADY IN SITE MAP
       const drpSrc = {
+        parentTitle: dropSource.dataset.parenttitle,
         parentid: dropSource.dataset.parentid,
         parentlinks: JSON.parse(dropSource.dataset.parentlinks),
         indexInLinks: dropSource.dataset.index,
@@ -244,6 +245,7 @@ class SiteMap extends Component{
                 id: drpSrc.parentid,
                 links: links,
                 lastModified,
+                title:drpSrc.parentTitle,
                 childPages: searchTree(drpSrc.parentid, data.pageByTitle, drgSrc.indexInLinks, drpSrc.indexInLinks),
                 __typename:'Page'
               },
