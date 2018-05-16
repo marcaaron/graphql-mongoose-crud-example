@@ -91,7 +91,7 @@ class EditSite extends Component{
     super(props);
     let html = props.pageById.content;
     if(/^<img/.test(html)){
-      html = `<p>${html}`;
+      html = `<p></p>${html}`;
     }
     console.log(html);
     const contentBlock = htmlToDraft(html);

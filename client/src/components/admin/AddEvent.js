@@ -24,6 +24,16 @@ const addEvent = gql`
   }
 }`;
 
+const allEvents = gql`{
+  allEvents{
+    id
+    title
+    eventDate
+    dateCreated
+    lastModified
+  }
+}`;
+
 function getSignedRequest(file){
   return new Promise((resolve,reject)=>{
     const xhr = new XMLHttpRequest();
@@ -158,13 +168,14 @@ class AddEvent extends Component{
 
        this.props.addEvent(
          {
-           variables: {title, eventDate, startTime, endTime, content, dateCreated, lastModified, location, allDay}
+           variables: {title, eventDate, startTime, endTime, content, dateCreated, lastModified, location, allDay},
+           refetchQueries:[{query:allEvents}]
          }).then(res=>{
             console.log(res);
             const successResult = res.data.addEvent;
             this.setState({success:true, successResult});
          })
-            .catch(err=>alert(err));  
+            .catch(err=>alert(err));
     }
   }
 
@@ -198,14 +209,16 @@ class AddEvent extends Component{
             <DatePicker
               selected={this.state.eventDate}
               onChange={this.handleDateChange}
+              className="datepicker-styles"
             />
           </div>
           <div className="add-page-container">
             <div className="add-page-header"><span className="add-page-header-text">TIME:</span></div>
             {!this.state.allDay &&
-              <div style={{display:'flex'}}>
+              <div style={{display:'flex', alignItems:'center', margin:'0.5em'}}>
               START TIME:
               <TimePicker
+                className="datepicker-styles"
                 showSecond={false}
                 format={format}
                 use12Hours
@@ -214,6 +227,7 @@ class AddEvent extends Component{
               />
               END TIME:
               <TimePicker
+                className="datepicker-styles"
                 showSecond={false}
                 format={format}
                 use12Hours
@@ -222,8 +236,10 @@ class AddEvent extends Component{
               />
               </div>
             }
-            All Day
-            <input type="checkbox" name="allDay" checked={this.state.allDay} onChange={this.handleCheckbox}/>
+            <div style={{margin:'1em'}}>
+              All Day
+              <input type="checkbox" name="allDay" checked={this.state.allDay} onChange={this.handleCheckbox}/>
+            </div>
           </div>
 
           <div className="add-page-container">

@@ -83,8 +83,32 @@ class AdminSideBar extends Component{
 
         <NavLink style={hide} className="admin-sidebar-item" to="/admin/events">
           <span>Events Listings</span>
-          <span>{this.props.route === '/admin/events' ? '▼' : '▶︎'}</span>
+          <span>{(this.props.route === '/admin/events' ||
+            this.props.route === '/admin/events/add' ||
+            this.props.route === '/admin/events/edit' ||
+            this.props.route === `/admin/events/edit/${this.props.match.params.page}`)
+          ? '▼' : '▶︎'}</span>
         </NavLink>
+        {
+          (this.props.route === '/admin/events' ||
+            this.props.route === '/admin/events/add' ||
+            this.props.route === '/admin/events/edit' ||
+            this.props.route === `/admin/events/edit/${this.props.match.params.page}`) &&
+          [
+            <Link key={uuidv1()} style={hide} className="admin-sidebar-item" to="/admin/events/add">
+            <span>– Add New Event</span>
+            <span>{this.props.route === '/admin/events/add' ? '▼' : '▶︎'}</span>
+            </Link>,
+            <Link key={uuidv1()} style={hide} className="admin-sidebar-item" to="/admin/events/edit">
+              <span>– Update Existing Events</span>
+              <span>{
+                (
+                  this.props.route === '/admin/events/edit' ||  this.props.route===`/admin/events/edit/${this.props.match.params.page}`
+                ) ? '▼' : '▶︎'
+              }</span>
+            </Link>
+          ]
+        }
 
         <NavLink style={hide} className="admin-sidebar-item" to="/admin/staff">
           <span>Staff Directory</span>

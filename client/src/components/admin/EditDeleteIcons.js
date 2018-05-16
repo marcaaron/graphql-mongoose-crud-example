@@ -57,6 +57,23 @@ class EditDeleteIcons extends Component{
             icon={faTrashAlt}/>
         </div>
       );
+    }else if(this.props.type === 'event'){
+      const {eventId, handleDelete} = this.props;
+      return(
+        <div>
+          <Link to={`/admin/events/edit/${eventId}`}>
+            <FontAwesomeIcon
+              className="edit-btn"
+              style={{fontSize:'1.2em', padding:'0.2em'}}
+              icon={faEdit}/>
+          </Link>
+          <FontAwesomeIcon
+            onClick={()=>handleDelete(eventId)}
+            className="delete-btn"
+            style={{fontSize:'1.2em', padding:'0.2em'}}
+            icon={faTrashAlt}/>
+        </div>
+      );
     }
   }
 }

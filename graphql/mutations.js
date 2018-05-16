@@ -42,6 +42,16 @@ const mutation = new GraphQLObjectType({
         return PageModel.findByIdAndRemove(id);
       }
     },
+    // Delete by ID
+    deleteEvent: {
+      type: EventType,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve(parentValue, {id}){
+        return EventModel.findByIdAndRemove(id);
+      }
+    },
     // Update by ID - pageType & dateCreated are immutable - a page's type can not be changed once instantiated
     updatePage: {
       type: PageType,
