@@ -2,8 +2,9 @@ const graphql = require('graphql');
 const PageModel = require('../models/page');
 const StaffMemberModel = require('../models/StaffMember');
 const mongoose = require('mongoose');
+const EventModel = require('../models/Event');
 
-const { GraphQLNonNull, GraphQLScalarType, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema, GraphQLList } = graphql;
+const { GraphQLNonNull, GraphQLBoolean, GraphQLScalarType, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema, GraphQLList } = graphql;
 
 // Set Up a Page Type
   // Links = an array of page ids to populate the childPages field
@@ -72,4 +73,23 @@ const MediaType = new GraphQLObjectType({
   })
 });
 
-module.exports = { PageType, StaffMemberType, MediaType };
+// Staff Member Type
+
+const EventType = new GraphQLObjectType({
+  name:'Event',
+  fields: () => ({
+    id:{type: GraphQLString},
+    title:{type: GraphQLString},
+    eventDate:{type: GraphQLString},
+    startTime:{type: GraphQLString},
+    content:{type: GraphQLString},
+    location:{type: GraphQLString},
+    endTime:{type: GraphQLString},
+    category:{type: GraphQLString},
+    dateCreated:{type: GraphQLString},
+    lastModified:{type: GraphQLString},
+    allDay:{type: GraphQLBoolean}
+  })
+});
+
+module.exports = { PageType, StaffMemberType, MediaType, EventType };

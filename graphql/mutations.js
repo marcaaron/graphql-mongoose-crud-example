@@ -1,10 +1,15 @@
 const graphql = require('graphql');
+
+// Models
 const PageModel = require('../models/page');
 const StaffMemberModel = require('../models/StaffMember');
+const EventModel = require('../models/Event');
 
-const { GraphQLNonNull, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema, GraphQLList } = graphql;
 
-const { PageType, StaffMemberType } = require('./types');
+const { GraphQLNonNull, GraphQLBoolean, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema, GraphQLList } = graphql;
+
+// GQL Types
+const { PageType, StaffMemberType, EventType } = require('./types');
 
 // Mutations to Create a Page, or Delete / Update an Existing page by ID
 // Can Create a new Page without links but all other fields are required!!!
@@ -53,6 +58,24 @@ const mutation = new GraphQLObjectType({
         return PageModel.findByIdAndUpdate(args.id, args, {new:true});
       }
     },
+    updateEvent:{
+      type: EventType,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        title: {type: GraphQLString},
+        eventDate: {type: GraphQLString},
+        startTime: {type: GraphQLString},
+        endTime: {type: GraphQLString},
+        content: {type: GraphQLString},
+        location: {type: GraphQLString},
+        lastModified: {type: new GraphQLNonNull(GraphQLString)},
+        category: {type: GraphQLString},
+        allDay:{type: new GraphQLNonNull(GraphQLBoolean)}
+      },
+      resolve(parentValue, args){
+        return EventModel.findByIdAndUpdate(args.id, args, {new:true});
+      }
+    },
     addStaffMember: {
       type: StaffMemberType,
       args: {
@@ -66,6 +89,27 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parentValue, {firstName, lastName, dept, description, contact, avatarUrl, route}){
         const instance = new StaffMemberModel ({ firstName, lastName, dept, description, contact, avatarUrl, route});
+        return instance.save();
+      }
+    },
+    addEvent: {
+      type: EventType,
+      args: {
+        title: {type: new GraphQLNonNull(GraphQLString)},
+        eventDate: {type: new GraphQLNonNull(GraphQLString)},
+        startTime: {type: GraphQLString},
+        endTime: {type: GraphQLString},
+        content: {type: GraphQLString},
+        location: {type: GraphQLString},
+        dateCreated: {type: new GraphQLNonNull(GraphQLString)},
+        lastModified: {type: new GraphQLNonNull(GraphQLString)},
+        category: {type: GraphQLString},
+        allDay:{type: new GraphQLNonNull(GraphQLBoolean)}
+      },
+      resolve(parentValue, {title, allDay, eventDate, startTime, endTime, content, location, dateCreated, lastModified, category}){
+        const instance = new EventModel ({
+          title, allDay, eventDate, startTime, endTime, content, location, dateCreated, lastModified, category
+        });
         return instance.save();
       }
     }

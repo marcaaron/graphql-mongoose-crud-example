@@ -1,8 +1,9 @@
 const graphql = require('graphql');
 const PageModel = require('../models/page');
 const StaffMemberModel = require('../models/StaffMember');
+const EventModel = require('../models/Event');
 const mongoose = require('mongoose');
-const { PageType, StaffMemberType, MediaType } = require('./types');
+const { PageType, StaffMemberType, MediaType, EventType } = require('./types');
 const getS3Media = require('./helpers/getS3Media');
 const { GraphQLNonNull, GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLSchema, GraphQLList } = graphql;
 
@@ -55,6 +56,19 @@ const RootQuery = new GraphQLObjectType({
       args: {id: {type: GraphQLString}},
       resolve(parentValue, args){
         return StaffMemberModel.findOne({_id:args.id});
+      }
+    },
+    eventById:{
+      type: EventType,
+      args: {id: {type: GraphQLString}},
+      resolve(parentValue,args){
+        return EventModel.findOne({_id:args.id});
+      }
+    },
+    allEvents:{
+      type: new GraphQLList(EventType),
+      resolve(parentValue, args){
+        return EventModel.find();
       }
     }
   }

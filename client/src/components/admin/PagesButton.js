@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 class PagesButton extends Component{
   render(){
     return(
-      <Link style={{color:'black'}} to={`/admin/pages${this.props.destination}`}>
+      <Link style={{color:'black'}} to={this.props.destination}>
       <div className="pages-button">
         <FontAwesomeIcon style={{padding:'0.5em', alignSelf:'flex-start'}} icon={faPlusCircle}/>
         <FontAwesomeIcon style={{marginTop:'0.1em'}} size="3x" icon={this.props.icon}/>

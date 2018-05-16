@@ -30,6 +30,10 @@ class DecorativeBorder extends Component{
     this.setState({width});
   }
 
+  componentWillUnmount(){
+    window.removeEventListener('resize', this.onResize);
+  }
+
 
   render(){
     const arrowheads = [];

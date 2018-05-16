@@ -50,11 +50,8 @@ class EditPages extends Component{
   }
 
   componentWillUpdate(nextProps){
-    console.log('component will update');
-
     if((JSON.stringify(this.props.allPages.allPages) !== JSON.stringify(nextProps.allPages.allPages))){
       const allPages = [...nextProps.allPages.allPages];
-      console.log(allPages);
       this.setState({allPages});
     }
   }

@@ -10,14 +10,10 @@ class Pages extends Component{
   render(){
     return(
       <div className="pages-button-container">
-        <PagesButton icon={faSitemap} text="Create a Site Page" destination="/add-site"/>
-        <PagesButton icon={faFileAlt} text="Create a Document Page" destination="/add-document"/>
-        <PagesButton icon={faLink} text="Create a Link Page" destination="/add-link"/>
-        <PagesButton icon={faBoxOpen} text="Create a Container Page" destination="/add-container"/>
-
-        {/* <PagesButton/>
-        <PagesButton/>
-        <PagesButton/> */}
+        <PagesButton icon={faSitemap} text="Create a Site Page" destination="/admin/pages/add-site"/>
+        <PagesButton icon={faFileAlt} text="Create a Document Page" destination="/admin/pages/add-document"/>
+        <PagesButton icon={faLink} text="Create a Link Page" destination="/admin/pages/add-link"/>
+        <PagesButton icon={faBoxOpen} text="Create a Container Page" destination="/admin/pages/add-container"/>
       </div>
     )
   }

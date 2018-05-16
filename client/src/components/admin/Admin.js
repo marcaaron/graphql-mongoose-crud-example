@@ -13,6 +13,10 @@ import AddLink from './AddLink';
 import AddDocument from './AddDocument';
 import AddContainer from './AddContainer';
 import EditPage from './EditPage';
+import Events from './Events';
+import AddEvent from './AddEvent';
+import EditEvent from './EditEvent';
+import EditEvents from './EditEvents';
 
 class Admin extends Component{
   constructor(props){
@@ -29,6 +33,10 @@ class Admin extends Component{
   componentDidMount(){
     this.onResize();
     window.addEventListener('resize', this.onResize);
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener('resize', this.onResize);
   }
 
   componentWillUpdate(nextProps){
@@ -72,6 +80,17 @@ class Admin extends Component{
             className="admin-page">
             {this.state.currentRoute && this.state.currentRoute.page === 'sitemap' ?
             <SiteMap mainPageWidth={this.state.mainPageWidth}/> : null}
+
+            {this.state.currentRoute && this.state.currentRoute.page === 'events' ?
+            <Events mainPageWidth={this.state.mainPageWidth}/> : null}
+            {this.props.route === '/admin/events/add' ?
+            <AddEvent mainPageWidth={this.state.mainPageWidth}/> : null}
+            {this.props.route === '/admin/events/edit' ?
+            <EditEvents mainPageWidth={this.state.mainPageWidth}/> : null}
+            {this.props.route === `/admin/events/edit/${this.props.page.page}` ?
+            <EditEvent pageId={this.props.page.page} mainPageWidth={this.state.mainPageWidth}/> : null}
+
+
             {this.state.currentRoute && this.state.currentRoute.page === 'pages' ?
             <Pages mainPageWidth={this.state.mainPageWidth}/> : null}
             {this.state.currentRoute && this.state.currentRoute.page === 'add-site' ?
@@ -82,7 +101,7 @@ class Admin extends Component{
             <AddLink mainPageWidth={this.state.mainPageWidth}/> : null}
             {this.state.currentRoute && this.state.currentRoute.page === 'add-document' ?
             <AddDocument mainPageWidth={this.state.mainPageWidth}/> : null}
-            {this.state.currentRoute && this.state.currentRoute.page === 'edit' ?
+            {this.props.route === '/admin/pages/edit' ?
             <EditPages mainPageWidth={this.state.mainPageWidth}/> : null}
             {this.props.page && this.props.route === `/admin/pages/edit/${this.props.page.page}` ?
             <EditPage pageId={this.props.page.page} mainPageWidth={this.state.mainPageWidth}/> : null}

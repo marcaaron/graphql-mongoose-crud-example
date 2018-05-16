@@ -23,6 +23,10 @@ class AdminSideBar extends Component{
     this.setState({sideBarToggle: !this.state.sideBarToggle});
   }
 
+  componentWillUnmount(){
+    document.removeEventListener('transitionend', this.props.onResize);
+  }
+
   render(){
     let style = {};
     let hide = {};
